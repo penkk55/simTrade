@@ -12,9 +12,9 @@
 #     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 #     print(np)
 #
-
+#
 # 1.Create a simulator with custom parameters
-
+#
 # import pytz
 # from datetime import datetime, timedelta
 # from gym_mtsim import MtSimulator, OrderType, Timeframe, FOREX_DATA_PATH
@@ -57,7 +57,7 @@
 #     symbol='USDJPY',
 #     volume=2.,
 #     fee=0.01,
-# )
+)
 #
 # sim.tick(timedelta(days=5))
 #
@@ -163,6 +163,33 @@ env.render('advanced_figure', time_format="%Y-%m-%d")
 # Press the green button in the gutter to run the script.
 
 
+
+
+
+
+import gym
+from gym_mtsim import (
+    Timeframe, SymbolInfo,
+    MtSimulator, OrderType, Order, SymbolNotFound, OrderNotFound,
+    MtEnv,
+    FOREX_DATA_PATH, STOCKS_DATA_PATH, CRYPTO_DATA_PATH, MIXED_DATA_PATH,
+)
+from stable_baselines3 import A2C
+
+
+# env = gym.make('forex-hedge-v0')
+
+model = A2C('MultiInputPolicy', env, verbose=0)
+model.learn(total_timesteps=1000)
+
+observation = env.reset()
+while True:
+    action, _states = model.predict(observation)
+    observation, reward, done, info = env.step(action)
+    if done:
+        break
+
+env.render('advanced_figure', time_format="%Y-%m-%d")
 if __name__ == '__main__':
     # print_hi('PyCharm')
 
